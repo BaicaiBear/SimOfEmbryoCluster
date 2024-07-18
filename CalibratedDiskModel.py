@@ -23,13 +23,13 @@ sv_file = 'Data/'
 
 # Simulation ID
 
-simID = "sym"
+simID = "sym15_1000_200_100_S_SurfPot"
 print("sim ID: "+simID)
 
 # Simulation time for ODE model
-simtimes = np.linspace(0, 2000, 1000)
+simtimes = np.linspace(0, 1000, 1000)
 
-N = 500
+N = 200
 
 # Size of periodic box (in units of embryo size)
 L = 100
@@ -45,7 +45,7 @@ WellLength = 30  # Length scale of the well potential
 Fg = 219 + 70 *  np.random.randn(N)  # Units: [Embryo-Radius^2]/second
 
 # Maximum interaction distance for attractive Stokeslet interaction
-RFg_int = 2.8  # 2*sqrt(2) is the second next nearest neighbour in hexagonal grid
+RFg_int = 3.8  # 2*sqrt(2) is the second next nearest neighbour in hexagonal grid
 
 # Strength of rotational near-field interactions of neighbouring particles
 # Free spinning calibration
@@ -71,7 +71,7 @@ NFinteract = 1
 
 # Symmetrize the flow interactions?
 # Unsymmetrization cause noise which can drive the translational motion
-Symmetrize = 0
+Symmetrize = 1
 
 # Far-field attraction from embryos with up to two neighbours
 # (otherwirse only near-field interactions)
@@ -175,8 +175,9 @@ def EmbryoDynamics(t, y_):
 
     if Surf_Pot == 1:
         # Cylindircal coordinates of the particle positions
-        R_pos = np.linalg.norm(Pos3D[:, :2], axis=1)
-        Phi_pos = np.pi + np.arctan2(-Pos3D[:, 1], -Pos3D[:, 0])
+        Pos_R = Pos3D[:, :2] - [L / 2, L / 2]
+        R_pos = np.linalg.norm(Pos_R, axis=1)
+        Phi_pos = np.pi + np.arctan2(-Pos_R[:, 1], -Pos_R[:, 0])
     
     # Signed distance matrices r_i - r^0_i where flows from
     # singularities placed at r^0_i are evaluated at r_i
