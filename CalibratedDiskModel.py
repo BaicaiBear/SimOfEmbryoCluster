@@ -23,13 +23,13 @@ sv_file = 'Data/'
 
 # Simulation ID
 
-simID = "sym15_1000_200_100_S_SurfPot"
+simID = "sym25_2000_500_100_S_SurfPot"
 print("sim ID: "+simID)
 
 # Simulation time for ODE model
-simtimes = np.linspace(0, 1000, 1000)
+simtimes = np.linspace(0, 2000, 1000)
 
-N = 200
+N = 500
 
 # Size of periodic box (in units of embryo size)
 L = 100
