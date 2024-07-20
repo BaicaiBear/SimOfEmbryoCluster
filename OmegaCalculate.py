@@ -6,14 +6,16 @@ from matplotlib import animation
 from matplotlib.ticker import LogLocator, ScalarFormatter
 from matplotlib.colors import LogNorm
 
-simID = 'sym25_2000_500_100_S_SurfPot'
+simID = 'sym_test4'
 
-MK_video = 1
+MK_video = 0
+OmegaDelay = 1
 
 ### Load ode solution ###
 Pos = np.load('Data/'+simID+'/'+simID+'_pos.npy')
 time = np.load('Data/'+simID+'/'+simID+'_time.npy')
 omega0 = np.load('Data/'+simID+'/'+simID+'_omega0.npy')
+omega_last = omega0.copy()
 [N, L, Rnf_int, tau0, ModOmega0, N0_damping, NFinteract] = np.load('Data/'+simID+'/'+simID+'_params.npy')
 N = int(N)
 
@@ -22,6 +24,7 @@ def taueta(r):
     return np.log(Rnf_int / np.abs(r - 2))
 
 def ComputeOmega(x,y,omega0):
+    global omega_last
     dist_x = x.reshape(1, -1) - x.reshape(-1, 1)
     dist_y = y.reshape(1, -1) - y.reshape(-1, 1)
     rij = np.sqrt(dist_x ** 2 + dist_y ** 2)  # Distance matrix
@@ -31,6 +34,8 @@ def ComputeOmega(x,y,omega0):
     outp = omega0.copy().reshape(-1,1)
     # ANGULAR FREQUENCY CALCULATION
     if NFinteract == 1:
+        if OmegaDelay == 1:
+            sum_count = np.zeros(N)
         for j in range(r): # Loop through connected components      
             idx_num = []
             if np.count_nonzero(p==j) > 1: # If at least two elements in connected component
@@ -62,7 +67,10 @@ def ComputeOmega(x,y,omega0):
                     tau = tau0 * taueta(rij_curr)
                     
                     # Fill linear system matrix row for given particle
-                    M[l, l] = 1 + np.sum(tau)
+                    if OmegaDelay == 1:
+                        sum_count[curr_disk] = 1 + np.sum(tau)
+                    else:
+                        M[l,l] = 1 + np.sum(tau)
                     for n in range(len(nh_vec)):
                         M[l, np.where(idx_num==nh_vec[n])[0]] = tau[n]
 
@@ -72,8 +80,10 @@ def ComputeOmega(x,y,omega0):
                 else:
                     omega0_M = omega0[idx_num]
                 # Solve for the angular frequencies in this connected component
-                omega = np.linalg.solve(M, omega0_M)
+                omega = (omega0_M - M @ omega_last[idx_num]) / sum_count[idx_num] if OmegaDelay == 1 else np.linalg.solve(M, omega0_M)
                 # Add into array of all angular frequencies according to disk IDs
+                if OmegaDelay == 1:
+                    omega_last[idx_num] = omega
                 outp[idx_num] = omega.reshape(-1,1)
     return outp
 
