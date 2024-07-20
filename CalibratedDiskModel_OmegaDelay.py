@@ -23,7 +23,7 @@ sv_file = 'Data/'
 
 # Simulation ID
 
-simID = "sym30_2000_500_100_OmegaDelay_UNS"
+simID = "sym35_2000_500_100_OmegaDelay_S"
 print("sim ID: "+simID)
 
 # Simulation time for ODE model
@@ -74,7 +74,7 @@ NFinteract = 1
 
 # Symmetrize the flow interactions?
 # Unsymmetrization cause noise which can drive the translational motion
-Symmetrize = 0
+Symmetrize = 1
 
 # Far-field attraction from embryos with up to two neighbours
 # (otherwirse only near-field interactions)
