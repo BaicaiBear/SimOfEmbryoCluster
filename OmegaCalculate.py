@@ -110,16 +110,3 @@ def update(frame):
     ydata = Pos[:,frame].reshape(-1, 2)[:, 1] 
     cdata = omega_alltime[:, frame]
     sc.set_offsets(np.c_[xdata, ydata])
-    sc.set_array(cdata)
-    ax.set_xlim(-20, 120)
-    ax.set_ylim(-20, 120)
-    return sc, 
-ani = animation.FuncAnimation(fig, update, frames=range(len(time)), interval=20)
-
-# Save animation as video
-if MK_video:
-    Writer = animation.writers['ffmpeg']
-    writer = Writer(fps=15, metadata=dict(artist='Me'), bitrate=1800)
-    ani.save('Data/'+simID+'/'+simID+'_animation.mp4', writer=writer)
-
-plt.show()

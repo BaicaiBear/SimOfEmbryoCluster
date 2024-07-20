@@ -23,13 +23,13 @@ sv_file = 'Data/'
 
 # Simulation ID
 
-simID = "sym_test4"
+simID = "sym30_2000_500_100_OmegaDelay_UNS"
 print("sim ID: "+simID)
 
 # Simulation time for ODE model
-simtimes = np.linspace(0, 200, 1000)
+simtimes = np.linspace(0, 2000, 1000)
 
-N = 50
+N = 500
 
 # Size of periodic box (in units of embryo size)
 L = 100
@@ -265,7 +265,7 @@ def EmbryoDynamics(t, y_):
     
     # If OmegaDelay is included
     if OmegaDelay == 1:
-        omega_last = omega_all.copy()
+        omega_last = omega_all
 
     if Surf_Pot == 1:
         # Emulate centering effect of well curvature
