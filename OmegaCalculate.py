@@ -6,7 +6,7 @@ from matplotlib import animation
 from matplotlib.ticker import LogLocator, ScalarFormatter
 from matplotlib.colors import LogNorm
 
-simID = 'sym15_1000_200_100_S_SurfPot'
+simID = 'sym25_2000_500_100_S_SurfPot'
 
 MK_video = 1
 
